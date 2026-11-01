@@ -147,6 +147,16 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .auth-panel h1 { font:600 42px "Space Grotesk"; letter-spacing:-.04em; margin:7px 0 10px; }
 .auth-panel > p:not(.eyebrow) { color:#81899a; margin-bottom:28px; }
 .auth-panel form { display:grid; gap:15px; }
+.auth-tabs { display:flex; background:#edeef2; border-radius:10px; padding:4px; margin-bottom:22px; gap:4px; }
+.dark .auth-tabs { background:#191c24; }
+.auth-tabs button { flex:1; padding:8px 14px; border:0; background:transparent; border-radius:7px; font-size:13px; font-weight:500; color:#697284; transition:all .2s ease; cursor:pointer; }
+.dark .auth-tabs button { color:#9aa2b3; }
+.auth-tabs button.active { background:#fff; color:#172033; font-weight:600; box-shadow:0 2px 6px rgba(0,0,0,.06); }
+.dark .auth-tabs button.active { background:#252a36; color:#fff; }
+.auth-link { border:0; background:none; color:#6e5ce7; font-size:12px; text-align:right; padding:0; cursor:pointer; margin-top:-6px; margin-bottom:2px; font-weight:500; }
+.auth-link:hover { text-decoration:underline; }
+.form-error { color:#dc2626; background:#fef2f2; border:1px solid #fecaca; padding:10px 14px; border-radius:9px; font-size:12px; line-height:1.4; margin:0; }
+.dark .form-error { color:#fca5a5; background:#3b111166; border-color:#7f1d1d; }
 .auth-panel label { display:grid; gap:7px; color:#697183; font-size:11px; font-weight:600; }
 .auth-panel input { height:44px; border:1px solid #dfe2e8; border-radius:9px; background:#fff; padding:0 12px; outline:none; }
 .auth-panel input:focus { border-color:#8d7ced; box-shadow:0 0 0 3px #8d7ced1a; }

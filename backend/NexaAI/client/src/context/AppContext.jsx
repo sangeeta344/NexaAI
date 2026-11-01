@@ -67,6 +67,7 @@ export const AppContextProvider = ({ children }) => {
 
   const login = async (email, password) => applyAuth(await api.login({ email, password }));
   const register = async (name, email, password) => applyAuth(await api.register({ name, email, password }));
+  const resetPassword = async (email, new_password) => applyAuth(await api.resetPassword({ email, new_password }));
 
   const logout = async () => {
     try {
@@ -113,7 +114,7 @@ export const AppContextProvider = ({ children }) => {
   const value = {
     user, setUser, chats, setChats, selectedChat, selectedChatId,
     createNewChat, selectChat, updateChatMessages, refreshChats,
-    login, register, logout, authLoading, theme, setTheme,
+    login, register, resetPassword, logout, authLoading, theme, setTheme,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

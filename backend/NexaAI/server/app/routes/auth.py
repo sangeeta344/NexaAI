@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.database.database import get_db
 from app.models.user import User
-from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
+from app.schemas.auth import LoginRequest, RegisterRequest, ResetPasswordRequest, TokenResponse
 from app.schemas.user import UserResponse
 from app.services.auth_service import create_access_token, decode_access_token, hash_password, verify_password
 
@@ -21,9 +21,12 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 def register(payload: RegisterRequest, db: Session = Depends(get_db)):
-    email = payload.email.lower()
+    email = payload.email.strip().lower()
     if db.query(User).filter(User.email == email).first():
-        raise HTTPException(status_code=400, detail="An account with this email already exists")
+        raise HTTPException(
+            status_code=400,
+            detail="An account with this email already exists. Please log in or reset your password."
+        )
     user = User(name=payload.name.strip(), email=email, password_hash=hash_password(payload.password))
     db.add(user)
     db.commit()
@@ -33,9 +36,24 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=TokenResponse)
 def login(payload: LoginRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == payload.email.lower()).first()
-    if not user or not verify_password(payload.password, user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+    email = payload.email.strip().lower()
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="No account found with this email. Please register first.")
+    if not verify_password(payload.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Incorrect password. Please try again or use 'Forgot password?'.")
+    return {"access_token": create_access_token(user.id), "token_type": "bearer", "user": user}
+
+
+@router.post("/reset-password", response_model=TokenResponse)
+def reset_password(payload: ResetPasswordRequest, db: Session = Depends(get_db)):
+    email = payload.email.strip().lower()
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="No account found with this email address.")
+    user.password_hash = hash_password(payload.new_password)
+    db.commit()
+    db.refresh(user)
     return {"access_token": create_access_token(user.id), "token_type": "bearer", "user": user}
 
 

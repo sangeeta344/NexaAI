@@ -88,7 +88,7 @@ function App() {
 
   return (
     <div className={`app-shell ${theme}`}>
-      <Sidebar chats={chats} selectedChat={selectedChat} onNewChat={handleNewChat}
+      <Sidebar user={user} chats={chats} selectedChat={selectedChat} onNewChat={handleNewChat}
         onSelectChat={(id) => { selectChat(id).catch((e) => window.alert(e.message)); setPage("chat"); setMobileSidebarOpen(false); }}
         onNavigate={setPage} onLogout={logout} theme={theme} setTheme={setTheme}
         mobileOpen={mobileSidebarOpen} onCloseMobile={() => setMobileSidebarOpen(false)} />

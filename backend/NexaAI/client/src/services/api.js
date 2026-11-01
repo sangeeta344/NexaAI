@@ -13,7 +13,15 @@ async function request(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const error = new Error(data.detail || "Request failed");
+    let message = "Request failed";
+    if (typeof data.detail === "string") {
+      message = data.detail;
+    } else if (Array.isArray(data.detail)) {
+      message = data.detail.map((item) => item.msg || item.message || JSON.stringify(item)).join(", ");
+    } else if (data.message) {
+      message = data.message;
+    }
+    const error = new Error(message);
     error.status = response.status;
     throw error;
   }
@@ -23,6 +31,7 @@ async function request(path, options = {}) {
 export const api = {
   register: (payload) => request("/api/auth/register", { method: "POST", body: JSON.stringify(payload) }),
   login: (payload) => request("/api/auth/login", { method: "POST", body: JSON.stringify(payload) }),
+  resetPassword: (payload) => request("/api/auth/reset-password", { method: "POST", body: JSON.stringify(payload) }),
   me: () => request("/api/auth/me"),
   logout: () => request("/api/auth/logout", { method: "POST" }),
   chat: (payload) => request("/api/chat", { method: "POST", body: JSON.stringify(payload) }),

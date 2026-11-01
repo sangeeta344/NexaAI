@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { assets } from "../assets/assets";
 
 const Sidebar = ({
+  user,
   chats,
   selectedChat,
   onNewChat,
@@ -74,10 +75,10 @@ const Sidebar = ({
           </button>
 
           <div className="profile-card">
-            <div className="avatar">{(selectedChat?.userName || "N").charAt(0)}</div>
+            <div className="avatar">{(user?.name || selectedChat?.userName || "N").charAt(0).toUpperCase()}</div>
             <div className="profile-copy">
-              <strong>{selectedChat?.userName || "Nexa User"}</strong>
-              <span>Free workspace</span>
+              <strong>{user?.name || selectedChat?.userName || "Nexa User"}</strong>
+              <span>{user?.email || "Free workspace"}</span>
             </div>
             <button onClick={onLogout} title="Log out">↗</button>
           </div>
