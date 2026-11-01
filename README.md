@@ -240,6 +240,3 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-<p align="center">
-  <b>Built with ❤️ using React, Python, FastAPI and Google Gemini AI</b>
-</p>
